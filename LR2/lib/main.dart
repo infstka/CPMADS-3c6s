@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lr2/items.dart';
 
 void main() {
   runApp(const MyApp());
+
+  initShops();
+  initCollections();
+  initError();
 }
 
 class MyApp extends StatelessWidget {
@@ -24,8 +29,68 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'LR1'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
+  }
+}
+
+void initShops() {
+  FirstShop firstShop = FirstShop("First", 5);
+  firstShop.printName();
+  firstShop.printCount();
+
+  SecondShop secondShop = SecondShop("Second", 123456);
+  secondShop.printName();
+  secondShop.printCount();
+
+  ThirdShop thirdShop = ThirdShop.NamedConstructor("Third", 500);
+  thirdShop.openOrClose("open");
+  thirdShop.shopName((value) => print(value));
+  thirdShop.updateShopCount(10);
+  thirdShop.updateShopCount(50);
+}
+
+void initCollections() {
+  FirstShop fs1 = FirstShop("fs1", 100);
+  FirstShop fs2 = FirstShop("fs2", 200);
+  FirstShop fs3 = FirstShop("fs3", 300);
+
+  List<int> list = [1, 2, 3];
+  list.add(4);
+  list.remove(1);
+  print(list);
+
+  Set<int> setList = {1, 2};
+  setList.add(3);
+  setList.add(4);
+  setList.add(5);
+  print(setList);
+
+  Map<int, FirstShop> mapShops = {100: fs1, 200: fs2, 300: fs3};
+  mapShops.forEach((key, value) {
+    print(mapShops[key]!.name);
+  });
+
+  for (int i = 100; i <= 300; i += 100) {
+    if (i == 200) {
+      continue;
+    }
+    if (i == 1000) {
+      break;
+    }
+    print(mapShops[i]?.name);
+  }
+}
+
+void initError() {
+  try {
+    for (int i = 1; i < 10; i++) {
+      if (i == 5) {
+        throw ErrorDescription("Error");
+      }
+    }
+  } catch (error) {
+    print(error);
   }
 }
 
@@ -96,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Flutter Hot Reload:',
+              'You have pushed the button this many times:',
             ),
             Text(
               '$_counter',
