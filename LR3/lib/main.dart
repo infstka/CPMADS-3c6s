@@ -1,12 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:lr2/items.dart';
+import 'package:lr3/entity.dart';
+import 'package:lr3/iterator.dart';
+import 'package:lr3/user.dart';
+
+import 'dart:convert';
+
+import 'iterable.dart';
 
 void main() {
   runApp(const MyApp());
+  initAssistant();
+  comparableExample();
+  iterableExample();
+  iteratorExample();
+  serializationExample();
+  asyncExample();
+  futureExample();
 
-  initShops();
-  initCollections();
-  initError();
+  var subscription = getSingleStreamData().listen((data) => print(data));
+  subscription.onDone(() => print('Done!'));
+
+  // var subscription2 = getSingleStreamData().listen((data) => print(data));
+  // subscription2.onDone(() => print('Done!'));
+
+  var broadcastStreamController = StreamController.broadcast();
+  broadcastStreamController.stream.listen((event) {
+    print('first subscription: $event');
+  });
+  broadcastStreamController.stream.listen((event) {
+    print('second subscription: ${event + event}');
+  });
+  broadcastStreamController.sink.add(1);
+  broadcastStreamController.sink.add(100);
 }
 
 class MyApp extends StatelessWidget {
@@ -27,74 +54,104 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.amber,
+        primarySwatch: Colors.red,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-void initShops() {
-  FirstShop firstShop = FirstShop("First", 5);
-  firstShop.printName();
-  firstShop.printCount();
-  firstShop.openOrClose("close");
-  
-  SecondShop secondShop = SecondShop("Second", 123456);
-  secondShop.printName();
-  secondShop.printCount();
-  secondShop.openOrClose("open");
-  
-  ThirdShop thirdShop = ThirdShop.NamedConstructor("Third", 500);
-  thirdShop.printName();
-  thirdShop.openOrClose("open");
-  thirdShop.shopName((value) => print(value));
-  thirdShop.updateShopCount(10);
-  thirdShop.updateShopCount(50);
+void initAssistant() {
+  Assistant One = Assistant("One", "Shop1", 19);
+  One.showName();
+  One.placeOfWork();
 }
 
-void initCollections() {
-  FirstShop fs1 = FirstShop("fs1", 100);
-  FirstShop fs2 = FirstShop("fs2", 200);
-  FirstShop fs3 = FirstShop("fs3", 300);
+void comparableExample() {
+  print("\n");
+  Assistant One = Assistant("One", "Shop1", 19);
+  Assistant Two = Assistant("Two", "Shop2", 21);
+  print(One.compareTo(Two));
+  print(Two.compareTo(One));
+}
 
-  List<int> list = [1, 2, 3];
-  list.add(4);
-  list.remove(1);
-  print(list);
+void iterableExample() {
+  print("\n");
+  Assistant One = Assistant("One", "Shop1", 19);
+  Assistant Two = Assistant("Two", "Shop2", 21);
+  Assistant Three = Assistant("Three", "Shop3", 23);
 
-  Set<int> setList = {1, 2};
-  setList.add(3);
-  setList.add(4);
-  setList.add(5);
-  print(setList);
+  var assistants = [One, Two, Three];
 
-  Map<int, FirstShop> mapShops = {100: fs1, 200: fs2, 300: fs3};
-  mapShops.forEach((key, value) {
-    print(mapShops[key]!.name);
-  });
-
-  for (int i = 100; i <= 300; i += 100) {
-    if (i == 200) {
-      continue;
-    }
-    if (i == 1000) {
-      break;
-    }
-    print(mapShops[i]?.name);
+  var shopAssistant1 = ShopWorker1(assistants);
+  var firstTwoAssistants = shopAssistant1.take(3);
+  print(shopAssistant1.iterator);
+  for (var assistant in firstTwoAssistants) {
+    print(assistant.name);
   }
 }
 
-void initError() {
-  try {
-    for (int i = 1; i < 10; i++) {
-      if (i == 9) {
-        throw ErrorDescription("Error");
-      }
-    }
-  } catch (error) {
-    print(error);
+void iteratorExample() {
+  print("\n");
+  Assistant One = Assistant("One", "Shop1", 19);
+  Assistant Two = Assistant("Two", "Shop2", 21);
+  Assistant Three = Assistant("Three", "Shop3", 23);
+
+  var assistants = [One, Two, Three];
+
+  var shopAssistant2 = ShopAssistant2(assistants);
+
+  while (shopAssistant2.moveNext()) {
+    print(shopAssistant2.current.name);
   }
+}
+
+void serializationExample() {
+  print("\n");
+  User One = User("One", 19);
+  var json = One.toJSON();
+  print(json);
+  var userFromJson = One.fromJSON(json);
+  print(userFromJson.name + " " + userFromJson.age.toString());
+}
+
+Future<void> doWork() async {
+  print("Start doWork");
+  String message = await getAsyncMessage();
+  print("Got message: $message");
+  print("End doWork");
+}
+
+Future<String> getAsyncMessage() {
+  // имитация долгой работы с помощью задержки в 3 секунды
+  return Future.delayed(Duration(seconds: 3), () => "Hello Dart");
+}
+
+void asyncExample() {
+  print("\n");
+  doWork();
+  print("Call after doWork function");
+}
+
+Future getMessage() {
+  // для эмуляции длительной операции делаем задержку в 3 секунды
+  return Future.delayed(
+      Duration(seconds: 3), () => print("You got the message from me"));
+}
+
+void futureExample() {
+  print("\n");
+  getMessage();
+  print("I call this print after getMessage func");
+}
+
+Stream<int> getSingleStreamData() {
+  final controller = StreamController<int>();
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.close();
+  return controller.stream;
 }
 
 class MyHomePage extends StatefulWidget {
@@ -168,7 +225,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineMedium,
             ),
           ],
         ),

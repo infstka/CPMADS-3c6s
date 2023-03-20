@@ -16,6 +16,10 @@ class FirstShop extends Shop implements IShop {
   void printName() {
     print("Shop name: $name");
   }
+
+  void openOrClose(String word) {
+    print("$name status is: $word");
+  }
 }
 
 class SecondShop extends Shop implements IShop {
@@ -36,6 +40,10 @@ class SecondShop extends Shop implements IShop {
     print("Shop name: $name");
   }
 
+  void openOrClose(String word) {
+    print("$name status is: $word");
+  }
+
   @override
   void printCount() {
     print("Shop $name have $count shops in the world");
@@ -47,6 +55,10 @@ class SecondShop extends Shop implements IShop {
 class ThirdShop {
   String ?name;
   late int count;
+
+  void printName() {
+    print("Shop name: $name");
+  }
 
   void openOrClose(String word) {
     print("$name status is: $word");
