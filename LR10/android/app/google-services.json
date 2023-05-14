@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "710984972727",
+    "project_id": "cpmads-lr10",
+    "storage_bucket": "cpmads-lr10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710984972727:android:1e53457930beffefbc5032",
+        "android_client_info": {
+          "package_name": "by.cpmads.lr10"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710984972727-ae3muo7cgc34kds3q86mbu6fdj8aapnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ2fp0nzDCl_AzaSHBvzm8d0E9vPkgKws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710984972727-ae3muo7cgc34kds3q86mbu6fdj8aapnj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
